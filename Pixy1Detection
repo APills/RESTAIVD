@@ -1,0 +1,35 @@
+from pixy import *
+from ctypes import *
+
+# Pixy Python SWIG get blocks example #
+
+print ("Pixy Python SWIG Example -- Get Blocks")
+
+# Initialize Pixy Interpreter thread #
+pixy_init()
+
+class Blocks (Structure):
+  _fields_ = [ ("type", c_uint),
+               ("signature", c_uint),
+               ("x", c_uint),
+               ("y", c_uint),
+               ("width", c_uint),
+               ("height", c_uint),
+               ("angle", c_uint) ]
+
+blocks = BlockArray(100)
+frame = 0
+xAxis = 0
+yAxis = 0
+while 1:
+  count = pixy.ccc_get_blocks (100, blocks)
+  if count > 0:
+    
+    for index in range (0, count):
+      prevxAxis = xAxis 
+      prevyAxis = yAxis
+      print '[BLOCK: SIG=%d X=%3d Y=%3d WIDTH=%3d HEIGHT=%3d]' % (blocks[index].m_signature, blocks[index].m_x, blocks[index].m_y, blocks[index].m_width, blocks[index].m_height)
+      xAxis =  blocks[index].m_x
+      yAxis =  blocks[index].m_y
+      if blocks[index].m_signature == 1:
+        print("Signature Detected")
